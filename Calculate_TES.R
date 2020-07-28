@@ -20,7 +20,7 @@ check_libs(libs)
 
 # Creating folder to store the results
 f_name <- paste0(control_treatment,"_vs_",experimental_treatment)
-if(!dir.exists(paste0("res/",f_name))) dir.create(paste0("res/",f_name))
+if(!dir.exists(paste0("res/",f_name))) dir.create(paste0("res/",f_name), recursive=T)
 
 # Loading RCB score values
 RCB_ctrl <- as.numeric(read.delim(file=paste0("data/",control_treatment,".txt"), header=F)$V1)
