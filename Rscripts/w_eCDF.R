@@ -1,4 +1,4 @@
-w_eCDF <- function(x,scale=0.5) {
+w_eCDF <- function(x,scale=0) {
   #Compute empirical weighted cummulative distribution function
   x <- sort(x)
   n <- length(x)
