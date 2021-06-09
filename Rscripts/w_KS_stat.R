@@ -1,4 +1,4 @@
-w_KS_stat <- function(RCB_ctrl, RCB_exp, scale=0.5, ifplot=T, plots_folder=".", prj_title="Project") {
+w_KS_stat <- function(RCB_ctrl, RCB_exp, scale=0, ifplot=T, plots_folder=".", prj_title="Project") {
 # Estimate Treatment Efficacy Score (TES) using two sample weighted Kolmogorov-Smirnov test
 # by comparing RCB score from experimental treatment cohort vs control cohort and Area Beetwen CDF curves (ABC)
 #
@@ -19,20 +19,11 @@ w_KS_stat <- function(RCB_ctrl, RCB_exp, scale=0.5, ifplot=T, plots_folder=".", 
   ecdf_exp <- w_eCDF(RCB_exp, scale=scale)
   ecdf_diff <- function(x){ecdf_exp(x) - ecdf_ctrl(x)}
   
-  # calculate Treatment Efficacy score (TES) as supremum of ecdf_diff
+  # calculate Treatment Efficacy score (TES) as an area between two eCDF curves
   x <- sort(unique(c(0,RCB_ctrl,RCB_exp)))
   ecdf_diff_calc <- ecdf_diff(x)
-  D_range <- range(ecdf_diff_calc)
-  if (abs(D_range[1]) > abs(D_range[2])){
-    TES <- D_range[1]
-  } else {
-    TES <- D_range[2]
-  }
-  
-  # get AUC from ecdf_diff
-  AUC <- sum(ecdf_diff_calc[-length(ecdf_diff_calc)] * (x[-1] - x[-length(x)]))/max(x)  #step function method
-  # AUC <- sum((apply(cbind(ecdf_diff_calc[-length(ecdf_diff_calc)], ecdf_diff_calc[-1]), 1, mean)) * (x[-1] - x[-length(x)]))/max(x)   #trapezoid method
-  
+  TES <- sum(ecdf_diff_calc[-length(ecdf_diff_calc)] * (x[-1] - x[-length(x)]))/max(x)
+
   if (ifplot){
     require(gridExtra)
     require(ggplot2)
@@ -46,7 +37,7 @@ w_KS_stat <- function(RCB_ctrl, RCB_exp, scale=0.5, ifplot=T, plots_folder=".", 
       geom_step(aes(y=ecdf_exp),col="blue") + theme_bw() + theme(plot.title=element_text(hjust=0.5)) +
       labs(x="RCB score", y="Weighted empirical CDF", title="Experimental (blue) vs control (red) treatment") + ylim(c(0,1))
     p2 <- ggplot(data_plot, aes(x=x, y=ecdf_diff)) + geom_step(col="green") + theme_bw() +
-      labs(x="RCB score", y="Running Treatment Efficacy Score", title=paste0("TES=",signif(TES,2), ", ABC=",signif(AUC,2))) +
+      labs(x="RCB score", y="Running Treatment Efficacy Score", title=paste0("TES=",signif(TES,2))) +
       theme(plot.title=element_text(hjust=0.5)) + geom_hline(yintercept=0, col="black") +
       geom_hline(yintercept=D_range[1], colour = "red", linetype = "dashed") +
       geom_hline(yintercept=D_range[2], colour = "red", linetype = "dashed")
@@ -55,7 +46,5 @@ w_KS_stat <- function(RCB_ctrl, RCB_exp, scale=0.5, ifplot=T, plots_folder=".", 
     dev.off()
   }
   
-  res <- c(TES, AUC)
-  names(res) <- c("TES","AUC")
-  res
+  return(TES)
 }
