@@ -38,9 +38,7 @@ w_KS_stat <- function(RCB_ctrl, RCB_exp, scale=0, ifplot=T, plots_folder=".", pr
       labs(x="RCB score", y="Weighted empirical CDF", title="Experimental (blue) vs control (red) treatment") + ylim(c(0,1))
     p2 <- ggplot(data_plot, aes(x=x, y=ecdf_diff)) + geom_step(col="green") + theme_bw() +
       labs(x="RCB score", y="Running Treatment Efficacy Score", title=paste0("TES=",signif(TES,2))) +
-      theme(plot.title=element_text(hjust=0.5)) + geom_hline(yintercept=0, col="black") +
-      geom_hline(yintercept=D_range[1], colour = "red", linetype = "dashed") +
-      geom_hline(yintercept=D_range[2], colour = "red", linetype = "dashed")
+      theme(plot.title=element_text(hjust=0.5)) + geom_hline(yintercept=0, col="black")
     pdf(file=paste0(plots_folder,"/wKS_",prj_title,".pdf"), width=8, height=6)
     gridExtra::grid.arrange(p1,p2,nrow=2)
     dev.off()
