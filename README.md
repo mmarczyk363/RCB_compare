@@ -3,7 +3,7 @@ R code to compare distribution of RCB scores from patients treated with one type
 
 We propose a new metric, Treatment Efficacy Score (TES) that can capture the relative efficacy of one treatment over the other. We explored three different methods to calculate TES:
 
-•	Weighted two-sample Kolmogorov-Smirnov test (wKS)
+•	Weighted two-sample Kolmogorov-Smirnov test (wKS) - recommended
 
 •	Density ratio of RCB scores from two treatments (DensRatio)
 
