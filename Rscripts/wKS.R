@@ -30,7 +30,7 @@ wKS <- function(RCB_ctrl,RCB_exp, n_perm=10000, scale=0, ifplot=T, plots_folder=
   res_perm <- mclapply(perm_list, function(d){
     res_KS <- w_KS_stat_fast(RCB_all[d], RCB_all[-d], scale=scale)
   },  mc.cores = n_cores)
-  res_perm <- do.call(c,res_perm)
+  res_perm <- data.frame(do.call(c,res_perm))
   colnames(res_perm) <- "TES"
   
   # calculate p-value of one sided test
