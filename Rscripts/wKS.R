@@ -34,11 +34,11 @@ wKS <- function(RCB_ctrl,RCB_exp, n_perm=10000, scale=0, ifplot=T, plots_folder=
   colnames(res_perm) <- "TES"
   
   # calculate p-value of one sided test
-  TES_p <- sum(res_perm[,1] > TES)/n_perm  
+  TES_p <- sum(res_perm$TES > TES)/n_perm  
   TES_p <- max(1/n_perm, TES_p)
   
   # shift TES value using expected value from TES distribution
-  TES <- TES - mean(res_perm)
+  TES <- TES - mean(res_perm$TES)
   
   if(ifplot){
     # plot null distribution of TES
