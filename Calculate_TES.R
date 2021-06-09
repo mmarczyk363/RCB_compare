@@ -2,7 +2,7 @@ rm(list = ls())
 gc()
 
 # Please set the working directory first !!!
-setwd("c:/Users/mm3525/Software/RCB_compare")
+setwd("")
 tmp <- sapply(paste0("Rscripts/",list.files(path="Rscripts")), source)
 
 # Please set the number of permutations, method to calculate TES 
@@ -11,6 +11,7 @@ tmp <- sapply(paste0("Rscripts/",list.files(path="Rscripts")), source)
 method <- "wKS" #"wKS","DensRatio" or "DensDiff
 n_perm <- 10000
 n_cores <- 1
+scale <- -0.136 
 control_treatment <- "Ctrl_treat"
 experimental_treatment <- "Exp_treat"
 
@@ -22,7 +23,7 @@ check_libs(libs)
 f_name <- paste0(control_treatment,"_vs_",experimental_treatment)
 if(!dir.exists(paste0("res/",f_name))) dir.create(paste0("res/",f_name), recursive=T)
 
-# Loading RCB score values
+# Loading RCB score values (single column .txt files stored in data folder)
 RCB_ctrl <- as.numeric(read.delim(file=paste0("data/",control_treatment,".txt"), header=F)$V1)
 RCB_exp <- as.numeric(read.delim(file=paste0("data/",experimental_treatment,".txt"), header=F)$V1)
 cat("Control treatment cohort size:",length(RCB_ctrl),"\n")
@@ -30,7 +31,7 @@ cat("Experimental treatment cohort size:",length(RCB_exp),"\n")
 
 # Calculating Treatment Efficacy Score and its p-value
 res_TES <- switch(method,
-  wKS = wKS(RCB_ctrl, RCB_exp, n_perm=n_perm, plots_folder=paste0("res/",f_name), prj_title=f_name, n_cores=n_cores),
+  wKS = wKS(RCB_ctrl, RCB_exp, n_perm=n_perm, plots_folder=paste0("res/",f_name), prj_title=f_name, n_cores=n_cores, scale=scale),
   DensRatio = DensRatio(RCB_ctrl, RCB_exp, n_perm=n_perm, plots_folder=paste0("res/",f_name), prj_title=f_name, n_cores=n_cores),
   DensDiff = DensDiff(RCB_ctrl, RCB_exp, n_perm=n_perm, sig="auto", plots_folder=paste0("res/",f_name), prj_title=f_name, n_cores=n_cores))
 print(res_TES)
